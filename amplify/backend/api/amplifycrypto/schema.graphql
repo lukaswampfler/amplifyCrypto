@@ -1,0 +1,35 @@
+type Chat @model {
+  id: ID!
+  name: String!
+  messages: [Message] @connection(keyName: "byChat", fields: ["id"])
+}
+
+type Message @model @key(name: "byChat", fields: ["chatID"]) {
+  id: ID!
+  senderID: ID!
+  receiverID: ID!
+  text: String!
+  method: EncryptionMethod!
+  createdAt: AWSDateTime!
+  chatID: ID!
+  chat: Chat @connection(fields: ["chatID"])
+}
+
+type User @model {
+  id: ID!
+  publicKey: Key!
+  privateKey: Key!
+}
+
+type Key @model {
+  exponent: String!
+  modulus: String!
+}
+
+enum EncryptionMethod {
+  RSA
+  SDES
+  CAESAR
+  VIGENERE
+  PERMUTATION
+}
